@@ -14,6 +14,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Avoid 404 for browser's default favicon request (icon is set in index.html)
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
 app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'OK', 
