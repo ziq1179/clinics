@@ -1,24 +1,7 @@
 -- ============================================
--- Clinic Management System - Neon Database Setup
--- Run this entire file in Neon SQL Editor
+-- Add missing tables (doctors, appointments, prescriptions, billing)
+-- Run in Neon SQL Editor - use this if you already have "patients"
 -- ============================================
-
--- 1. Patients
-CREATE TABLE IF NOT EXISTS patients (
-    patient_id SERIAL PRIMARY KEY,
-    patient_code VARCHAR(10) GENERATED ALWAYS AS ('P' || LPAD(patient_id::TEXT, 5, '0')) STORED,
-    full_name VARCHAR(100) NOT NULL,
-    cnic VARCHAR(15) UNIQUE,
-    contact_number VARCHAR(15) NOT NULL,
-    gender VARCHAR(10) NOT NULL CHECK (gender IN ('Male', 'Female', 'Other')),
-    date_of_birth DATE,
-    age INTEGER GENERATED ALWAYS AS (EXTRACT(YEAR FROM AGE(CURRENT_DATE, date_of_birth))) STORED,
-    address VARCHAR(200),
-    medical_history TEXT,
-    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_active BOOLEAN DEFAULT TRUE
-);
 
 -- 2. Doctors
 CREATE TABLE IF NOT EXISTS doctors (
@@ -89,14 +72,12 @@ CREATE TABLE IF NOT EXISTS billing (
 );
 
 -- Indexes
-CREATE INDEX IF NOT EXISTS idx_patients_cnic ON patients(cnic);
-CREATE INDEX IF NOT EXISTS idx_patients_contact ON patients(contact_number);
 CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(appointment_date, appointment_time);
 CREATE INDEX IF NOT EXISTS idx_appointments_patient ON appointments(patient_id);
 CREATE INDEX IF NOT EXISTS idx_appointments_doctor ON appointments(doctor_id);
 CREATE INDEX IF NOT EXISTS idx_billing_date ON billing(bill_date);
 
--- Trigger function for updated_date
+-- Trigger function
 CREATE OR REPLACE FUNCTION update_updated_date()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -105,30 +86,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Triggers (drop first if re-running)
-DROP TRIGGER IF EXISTS update_patients_updated_date ON patients;
-CREATE TRIGGER update_patients_updated_date
-    BEFORE UPDATE ON patients
-    FOR EACH ROW
-    EXECUTE PROCEDURE update_updated_date();
-
+-- Triggers
 DROP TRIGGER IF EXISTS update_appointments_updated_date ON appointments;
 CREATE TRIGGER update_appointments_updated_date
     BEFORE UPDATE ON appointments
     FOR EACH ROW
     EXECUTE PROCEDURE update_updated_date();
 
--- Sample data
+-- Sample doctors (run once; skip if you already have doctors)
 INSERT INTO doctors (full_name, specialization, qualification, contact_number, email, consultation_fee, availability_schedule)
 VALUES 
     ('Dr. Ahmed Ali', 'General Physician', 'MBBS, FCPS', '0300-1234567', 'ahmed.ali@clinic.com', 1500, 'Mon-Sat: 9AM-5PM'),
     ('Dr. Fatima Khan', 'Gynecologist', 'MBBS, FCPS (Gynae)', '0321-9876543', 'fatima.khan@clinic.com', 2000, 'Mon-Fri: 10AM-4PM'),
-    ('Dr. Hassan Raza', 'Pediatrician', 'MBBS, DCH', '0333-5555555', 'hassan.raza@clinic.com', 1800, 'Mon-Sat: 8AM-2PM')
-ON CONFLICT DO NOTHING;
-
-INSERT INTO patients (full_name, cnic, contact_number, gender, date_of_birth, address, medical_history)
-VALUES 
-    ('Muhammad Usman', '42101-1234567-1', '0300-1111111', 'Male', '1990-05-15', 'Lahore, Pakistan', 'No known allergies'),
-    ('Ayesha Malik', '42201-9876543-2', '0321-2222222', 'Female', '1985-08-22', 'Karachi, Pakistan', 'Diabetic'),
-    ('Ali Hassan', '42301-5555555-3', '0333-3333333', 'Male', '2015-12-10', 'Islamabad, Pakistan', 'Asthma')
-ON CONFLICT DO NOTHING;
+    ('Dr. Hassan Raza', 'Pediatrician', 'MBBS, DCH', '0333-5555555', 'hassan.raza@clinic.com', 1800, 'Mon-Sat: 8AM-2PM');
