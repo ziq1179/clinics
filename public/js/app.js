@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+// Use same origin as the page – works on localhost and on Render
+const API_BASE_URL = window.location.origin + '/api';
 
 function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
