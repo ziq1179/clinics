@@ -1,18 +1,23 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// Supabase/PostgreSQL connection configuration
+// Neon / PostgreSQL connection configuration
+// Neon requires SSL - use ?sslmode=require in DATABASE_URL or we enable it for production
+const connectionString = process.env.DATABASE_URL;
+const isNeon = connectionString && connectionString.includes('neon.tech');
+
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    connectionString,
+    ssl: isNeon || process.env.NODE_ENV === 'production'
+        ? { rejectUnauthorized: false }
+        : false,
     max: 10,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
 });
 
-// Test connection
 pool.on('connect', () => {
-    console.log('✅ Connected to PostgreSQL/Supabase');
+    console.log('✅ Connected to PostgreSQL' + (isNeon ? ' (Neon)' : ''));
 });
 
 pool.on('error', (err) => {

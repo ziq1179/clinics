@@ -1,10 +1,10 @@
-# 🚀 Deployment Guide - GitHub + Supabase + Render
+# 🚀 Deployment Guide - GitHub + Neon + Render
 
 ## Overview
 
 This guide will help you deploy your Clinic Management System using:
 - **GitHub** - Version control and code hosting
-- **Supabase** - PostgreSQL database (free tier)
+- **Neon** - Serverless PostgreSQL database (free tier)
 - **Render** - Web hosting (free tier)
 
 ---
@@ -12,62 +12,46 @@ This guide will help you deploy your Clinic Management System using:
 ## 📋 Prerequisites
 
 1. **GitHub Account** - https://github.com/signup
-2. **Supabase Account** - https://supabase.com/
+2. **Neon Account** - https://neon.tech
 3. **Render Account** - https://render.com/
 
 ---
 
-## 🗄️ Step 1: Setup Supabase Database
+## 🗄️ Step 1: Setup Neon Database
 
-### 1.1 Create Supabase Project
+**See `NEON_SETUP.md` for full details.** Summary:
 
-1. Go to https://supabase.com/
-2. Click **"Start your project"**
-3. Sign in with GitHub
-4. Click **"New project"**
-5. Fill in:
-   - **Name**: `clinic-management`
-   - **Database Password**: Create a strong password (save it!)
-   - **Region**: Choose closest to you
-   - **Pricing Plan**: Free
-6. Click **"Create new project"**
-7. Wait 2-3 minutes for setup
+### 1.1 Create Neon Project
 
-### 1.2 Get Database Connection String
+1. Go to https://neon.tech
+2. Sign up (e.g. with GitHub)
+3. Click **New project**
+4. Name: `clinic-management`, choose region, set database password
+5. Click **Create project**
 
-1. In your Supabase project dashboard
-2. Click **"Settings"** (gear icon) → **"Database"**
-3. Scroll to **"Connection string"**
-4. Select **"URI"** tab
-5. Copy the connection string (looks like):
+### 1.2 Get Connection String
+
+1. In Neon dashboard → your project
+2. Open **Connection details**
+3. Copy the **Connection string** (URI). Example:
    ```
-   postgresql://postgres:[YOUR-PASSWORD]@db.xxxxxxxxxxxxx.supabase.co:5432/postgres
+   postgresql://user:password@ep-xxx-xxx.region.aws.neon.tech/neondb?sslmode=require
    ```
-6. Replace `[YOUR-PASSWORD]` with your actual database password
-7. **Save this connection string** - you'll need it!
+4. **Save this** – you'll use it as `DATABASE_URL`
 
 ### 1.3 Setup Database Tables
 
-**Option A: Using Supabase SQL Editor (Recommended)**
+**Option A: Neon SQL Editor (Recommended)**
 
-1. In Supabase dashboard, click **"SQL Editor"**
-2. Click **"New query"**
-3. Copy the entire content from `database/setup.js` (the SQL part)
-4. Paste into the SQL editor
-5. Click **"Run"**
-6. Tables will be created with sample data
+1. In Neon dashboard, open **SQL Editor**
+2. Copy the SQL from `database/setup.js` (the CREATE TABLE part)
+3. Paste and run in SQL Editor
+4. (Optional) Run `database/forecasting_schema.sql` for ML forecasting
 
-**Option B: Using Local Setup Script**
+**Option B: Local script**
 
-1. Update `.env` file with your Supabase connection string:
-   ```
-   DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.xxxxxxxxxxxxx.supabase.co:5432/postgres
-   ```
-2. Run:
-   ```bash
-   npm install
-   npm run setup-db
-   ```
+1. Set `DATABASE_URL` in `.env` to your Neon connection string
+2. Run: `npm run setup-db`
 
 ---
 
@@ -149,13 +133,13 @@ Add these variables:
 | Key | Value |
 |-----|-------|
 | `NODE_ENV` | `production` |
-| `DATABASE_URL` | Your Supabase connection string |
+| `DATABASE_URL` | Your Neon connection string |
 | `PORT` | `10000` |
 
 **Example:**
 ```
 NODE_ENV=production
-DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@db.xxxxxxxxxxxxx.supabase.co:5432/postgres
+DATABASE_URL=postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require
 PORT=10000
 ```
 
@@ -187,7 +171,7 @@ PORT=10000
 
 ### 4.2 Check Database
 
-1. Go to Supabase dashboard
+1. Go to Neon dashboard
 2. Click **"Table Editor"**
 3. You should see tables:
    - patients
@@ -234,7 +218,7 @@ git push origin main
 
 ### Free Tier Limitations
 
-**Supabase Free Tier:**
+**Neon Free Tier:**
 - ✅ 500 MB database storage
 - ✅ 2 GB bandwidth/month
 - ✅ 50,000 monthly active users
@@ -274,7 +258,7 @@ git push origin main
 ### 2. Database Security
 
 ✅ **DO:**
-- Enable Row Level Security (RLS) in Supabase (Phase 2)
+- Enable Row Level Security (RLS) in Neon / app (Phase 2)
 - Use strong database passwords
 - Regularly backup database
 
@@ -296,7 +280,7 @@ git push origin main
 - **Deployments**: Deployment history
 - **Settings**: Environment variables, scaling
 
-### Supabase Dashboard
+### Neon Dashboard
 
 - **Database**: View tables and data
 - **SQL Editor**: Run queries
@@ -318,13 +302,13 @@ git push origin main
 **Solution:**
 ```bash
 # Test locally first
-DATABASE_URL="your-supabase-url" npm start
+DATABASE_URL="your-neon-url" npm start
 ```
 
 ### Database Connection Failed
 
 **Check:**
-1. Supabase project is active
+1. Neon project is active
 2. Connection string is correct
 3. Password is correct (no special characters issues)
 4. SSL is enabled in production
@@ -364,13 +348,13 @@ app.use(cors({
 | Service | Plan | Cost |
 |---------|------|------|
 | GitHub | Free | $0/month |
-| Supabase | Free | $0/month |
+| Neon | Free | $0/month |
 | Render | Free | $0/month |
 | **Total** | | **$0/month** |
 
 ### Upgrade Options
 
-**Supabase Pro** ($25/month):
+**Neon Scale** (paid):
 - 8 GB database
 - 50 GB bandwidth
 - No inactivity pause
@@ -407,7 +391,7 @@ When you add Phase 2 features:
 
 When you need more:
 1. Upgrade Render plan
-2. Upgrade Supabase plan
+2. Upgrade Neon plan
 3. Add Redis caching
 4. Use CDN for static files
 
@@ -422,14 +406,14 @@ When you need more:
 
 ### Community
 - Render Discord: https://render.com/discord
-- Supabase Discord: https://discord.supabase.com
+- Neon Discord: https://discord.gg/neon
 - GitHub Community: https://github.community
 
 ---
 
 ## ✅ Deployment Checklist
 
-- [ ] Supabase project created
+- [ ] Neon project created
 - [ ] Database connection string obtained
 - [ ] Database tables created
 - [ ] Sample data inserted
@@ -450,7 +434,7 @@ When you need more:
 **Your URLs:**
 - **Application**: `https://your-app-name.onrender.com`
 - **GitHub**: `https://github.com/YOUR-USERNAME/clinic-management-system`
-- **Supabase**: `https://app.supabase.com/project/YOUR-PROJECT-ID`
+- **Neon**: `https://console.neon.tech`
 
 ---
 

@@ -8,44 +8,39 @@ Before starting the application, you need to set up your database.
 
 ## 🎯 **Choose Your Setup**
 
-### **Option 1: Supabase (Cloud - Recommended)** ☁️
+### **Option 1: Neon (Cloud - Recommended)** ☁️
 
 **Best for:** Production use, cloud deployment, no local setup needed
 
 **Steps:**
 
-1. **Create Supabase Account**
-   - Go to https://supabase.com
-   - Sign up (free)
-   - Create new project: "clinic-management"
-   - Wait 2 minutes for setup
+1. **Create Neon Account**
+   - Go to https://neon.tech
+   - Sign up (free, e.g. with GitHub)
+   - Create new project: "clinic-management", set password
+   - Wait for project to be ready
 
 2. **Get Database URL**
-   - In Supabase Dashboard
-   - Click Settings (gear icon) → Database
-   - Scroll to "Connection string"
-   - Select "URI" tab
-   - Copy the connection string (looks like):
+   - In Neon Dashboard → your project
+   - Open **Connection details** and copy the **Connection string** (URI)
+   - It looks like:
      ```
-     postgresql://postgres:[YOUR-PASSWORD]@db.xxxxx.supabase.co:5432/postgres
+     postgresql://user:password@ep-xxx-xxx.region.aws.neon.tech/neondb?sslmode=require
      ```
-   - Replace `[YOUR-PASSWORD]` with your actual database password
 
 3. **Update .env File**
-   - Open `.env` file in project root
-   - Replace line 3 with your actual connection string:
+   - Open `.env` in project root (copy from `.env.example` if needed)
+   - Set:
      ```
-     DATABASE_URL=postgresql://postgres:YOUR_ACTUAL_PASSWORD@db.xxxxx.supabase.co:5432/postgres
+     DATABASE_URL=postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require
      ```
    - Save the file
 
 4. **Setup Database Tables**
-   - In Supabase Dashboard
-   - Click "SQL Editor" → "New query"
-   - Open file: `database/setup.js`
-   - Copy the SQL part (CREATE TABLE statements)
-   - Paste in SQL Editor
-   - Click "Run"
+   - In Neon Dashboard open **SQL Editor**
+   - Copy the SQL from `database/setup.js` (the CREATE TABLE part)
+   - Paste in SQL Editor and run
+   - Or locally: `npm run setup-db`
 
 5. **Start Application**
    ```bash
@@ -56,6 +51,8 @@ Before starting the application, you need to set up your database.
    ```
    http://localhost:3000
    ```
+
+See **NEON_SETUP.md** for more detail.
 
 ---
 

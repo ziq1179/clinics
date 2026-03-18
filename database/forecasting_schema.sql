@@ -1,5 +1,5 @@
--- Revenue Forecasting Tables for Supabase
--- Run this in Supabase SQL Editor
+-- Revenue Forecasting Tables (Neon / PostgreSQL)
+-- Run this in Neon SQL Editor or any PostgreSQL client
 
 -- 1. Daily Revenue Summary Table (aggregated from billing)
 CREATE TABLE IF NOT EXISTS daily_revenue_summary (

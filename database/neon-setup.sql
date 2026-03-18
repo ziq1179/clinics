@@ -1,8 +1,9 @@
-const { pool } = require('./config');
-require('dotenv').config();
+-- ============================================
+-- Clinic Management System - Neon Database Setup
+-- Run this entire file in Neon SQL Editor
+-- ============================================
 
-const createTablesSQL = `
--- Patients Table
+-- 1. Patients
 CREATE TABLE IF NOT EXISTS patients (
     patient_id SERIAL PRIMARY KEY,
     patient_code VARCHAR(10) GENERATED ALWAYS AS ('P' || LPAD(patient_id::TEXT, 5, '0')) STORED,
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS patients (
     is_active BOOLEAN DEFAULT TRUE
 );
 
--- Doctors Table
+-- 2. Doctors
 CREATE TABLE IF NOT EXISTS doctors (
     doctor_id SERIAL PRIMARY KEY,
     doctor_code VARCHAR(10) GENERATED ALWAYS AS ('D' || LPAD(doctor_id::TEXT, 5, '0')) STORED,
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS doctors (
     is_active BOOLEAN DEFAULT TRUE
 );
 
--- Appointments Table
+-- 3. Appointments
 CREATE TABLE IF NOT EXISTS appointments (
     appointment_id SERIAL PRIMARY KEY,
     appointment_code VARCHAR(10) GENERATED ALWAYS AS ('A' || LPAD(appointment_id::TEXT, 5, '0')) STORED,
@@ -50,7 +51,7 @@ CREATE TABLE IF NOT EXISTS appointments (
     updated_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Prescriptions Table
+-- 4. Prescriptions
 CREATE TABLE IF NOT EXISTS prescriptions (
     prescription_id SERIAL PRIMARY KEY,
     prescription_code VARCHAR(10) GENERATED ALWAYS AS ('RX' || LPAD(prescription_id::TEXT, 5, '0')) STORED,
@@ -67,7 +68,7 @@ CREATE TABLE IF NOT EXISTS prescriptions (
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Billing Table
+-- 5. Billing
 CREATE TABLE IF NOT EXISTS billing (
     bill_id SERIAL PRIMARY KEY,
     bill_number VARCHAR(12) GENERATED ALWAYS AS ('BILL' || LPAD(bill_id::TEXT, 5, '0')) STORED,
@@ -87,7 +88,7 @@ CREATE TABLE IF NOT EXISTS billing (
     created_by VARCHAR(100)
 );
 
--- Create Indexes for Performance
+-- Indexes
 CREATE INDEX IF NOT EXISTS idx_patients_cnic ON patients(cnic);
 CREATE INDEX IF NOT EXISTS idx_patients_contact ON patients(contact_number);
 CREATE INDEX IF NOT EXISTS idx_appointments_date ON appointments(appointment_date, appointment_time);
@@ -95,7 +96,7 @@ CREATE INDEX IF NOT EXISTS idx_appointments_patient ON appointments(patient_id);
 CREATE INDEX IF NOT EXISTS idx_appointments_doctor ON appointments(doctor_id);
 CREATE INDEX IF NOT EXISTS idx_billing_date ON billing(bill_date);
 
--- Create trigger for updated_date
+-- Trigger function for updated_date
 CREATE OR REPLACE FUNCTION update_updated_date()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -104,19 +105,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Triggers (drop first if re-running)
+DROP TRIGGER IF EXISTS update_patients_updated_date ON patients;
 CREATE TRIGGER update_patients_updated_date
     BEFORE UPDATE ON patients
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_date();
 
+DROP TRIGGER IF EXISTS update_appointments_updated_date ON appointments;
 CREATE TRIGGER update_appointments_updated_date
     BEFORE UPDATE ON appointments
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_date();
-`;
 
-const insertSampleData = `
--- Sample Doctors
+-- Sample data
 INSERT INTO doctors (full_name, specialization, qualification, contact_number, email, consultation_fee, availability_schedule)
 VALUES 
     ('Dr. Ahmed Ali', 'General Physician', 'MBBS, FCPS', '0300-1234567', 'ahmed.ali@clinic.com', 1500, 'Mon-Sat: 9AM-5PM'),
@@ -124,44 +126,9 @@ VALUES
     ('Dr. Hassan Raza', 'Pediatrician', 'MBBS, DCH', '0333-5555555', 'hassan.raza@clinic.com', 1800, 'Mon-Sat: 8AM-2PM')
 ON CONFLICT DO NOTHING;
 
--- Sample Patients
 INSERT INTO patients (full_name, cnic, contact_number, gender, date_of_birth, address, medical_history)
 VALUES 
     ('Muhammad Usman', '42101-1234567-1', '0300-1111111', 'Male', '1990-05-15', 'Lahore, Pakistan', 'No known allergies'),
     ('Ayesha Malik', '42201-9876543-2', '0321-2222222', 'Female', '1985-08-22', 'Karachi, Pakistan', 'Diabetic'),
     ('Ali Hassan', '42301-5555555-3', '0333-3333333', 'Male', '2015-12-10', 'Islamabad, Pakistan', 'Asthma')
 ON CONFLICT DO NOTHING;
-`;
-
-async function setupDatabase() {
-    try {
-        console.log('🔧 Setting up Clinic Management Database (PostgreSQL/Neon)...\n');
-        
-        console.log('📋 Creating tables...');
-        await pool.query(createTablesSQL);
-        console.log('✅ Tables created successfully\n');
-        
-        console.log('📝 Inserting sample data...');
-        await pool.query(insertSampleData);
-        console.log('✅ Sample data inserted successfully\n');
-        
-        console.log('🎉 Database setup completed successfully!');
-        console.log('\n📊 Database Structure:');
-        console.log('   - patients');
-        console.log('   - doctors');
-        console.log('   - appointments');
-        console.log('   - prescriptions');
-        console.log('   - billing');
-        
-        process.exit(0);
-    } catch (err) {
-        console.error('❌ Database setup failed:', err.message);
-        console.error('\n💡 Make sure:');
-        console.error('   1. Neon project is created (or PostgreSQL is running)');
-        console.error('   2. DATABASE_URL in .env is correct');
-        console.error('   3. Database is accessible');
-        process.exit(1);
-    }
-}
-
-setupDatabase();

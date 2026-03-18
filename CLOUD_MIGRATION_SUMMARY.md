@@ -10,7 +10,7 @@ Your Clinic Management System has been converted from **local SQL Server** to **
 
 | Component | Before | After | Benefit |
 |-----------|--------|-------|---------|
-| **Database** | SQL Server (Local) | PostgreSQL (Supabase) | ☁️ Cloud, Free, Scalable |
+| **Database** | SQL Server (Local) | PostgreSQL (Neon) | ☁️ Cloud, Free, Scalable |
 | **Hosting** | Local | Render | 🌐 Public URL, Auto-deploy |
 | **Version Control** | None | GitHub | 🔄 Collaboration, Backup |
 | **Cost** | SQL Server license | $0/month | 💰 100% Free |
@@ -23,7 +23,7 @@ Your Clinic Management System has been converted from **local SQL Server** to **
 ### 1. Database Layer
 ```
 ❌ Before: mssql package → SQL Server
-✅ After:  pg package → PostgreSQL/Supabase
+✅ After:  pg package → PostgreSQL/Neon
 ```
 
 **Changes Made:**
@@ -49,7 +49,7 @@ DB_USER=sa
 DB_PASSWORD=password
 
 ✅ After:
-DATABASE_URL=postgresql://postgres:password@db.xxx.supabase.co:5432/postgres
+DATABASE_URL=postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require
 ```
 
 ### 4. Documentation
@@ -126,7 +126,7 @@ CURRENT_DATE
 
 ## 🎯 Deployment Options
 
-### Option 1: Supabase + Render (Recommended)
+### Option 1: Neon + Render (Recommended)
 
 **Best for:** Production use, free hosting
 
@@ -165,7 +165,7 @@ npm run dev
 **Compatible with:**
 - Heroku (PostgreSQL)
 - Railway (PostgreSQL)
-- Vercel (with Supabase)
+- Vercel (with Neon)
 - AWS RDS (PostgreSQL)
 - Google Cloud SQL (PostgreSQL)
 
@@ -215,8 +215,8 @@ Clinic_M/
 
 ### Next Steps (Your Actions)
 
-- [ ] Create Supabase account
-- [ ] Create Supabase project
+- [ ] Create Neon account
+- [ ] Create Neon project
 - [ ] Run database setup
 - [ ] Create GitHub repository
 - [ ] Push code to GitHub
@@ -235,7 +235,7 @@ Clinic_M/
 # Install dependencies
 npm install
 
-# Update .env with Supabase URL
+# Update .env with Neon URL
 # DATABASE_URL=postgresql://...
 
 # Setup database
@@ -296,7 +296,7 @@ git push -u origin main
 - ✅ No server hardware costs
 
 ### 4. Reliability
-- ✅ Automatic backups (Supabase)
+- ✅ Automatic backups (Neon)
 - ✅ 99.9% uptime
 - ✅ DDoS protection
 
@@ -321,7 +321,7 @@ git push -u origin main
 
 ### After (Cloud)
 - ✅ SSL/TLS encryption
-- ✅ Supabase security features
+- ✅ Neon security features
 - ✅ Automatic backups
 - ✅ Environment variable protection
 - ✅ GitHub private repository option
@@ -330,7 +330,7 @@ git push -u origin main
 
 ## 📈 Performance Comparison
 
-| Metric | Local | Cloud (Supabase + Render) |
+| Metric | Local | Cloud (Neon + Render) |
 |--------|-------|---------------------------|
 | **Setup Time** | 30 min | 15 min |
 | **Accessibility** | Local network | Worldwide |
@@ -350,7 +350,7 @@ git push -u origin main
 - ✅ Git version control
 - ✅ CI/CD pipelines
 - ✅ Environment variables
-- ✅ Cloud services (Supabase, Render)
+- ✅ Cloud services (Neon, Render)
 
 ### DevOps Skills
 - ✅ Database migration
@@ -401,7 +401,7 @@ ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : fal
 - **PostgreSQL**: https://www.postgresql.org/docs/
 
 ### Community
-- **Supabase Discord**: https://discord.supabase.com
+- **Neon Discord**: https://discord.gg/neon
 - **Render Discord**: https://render.com/discord
 
 ---
@@ -431,7 +431,7 @@ ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : fal
 
 ### Immediate (Today)
 1. Read `CLOUD_SETUP_QUICK.md`
-2. Create Supabase account
+2. Create Neon account
 3. Setup database
 4. Test locally
 
@@ -459,7 +459,7 @@ ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : fal
 - **Total**: $931/year or limited free
 
 ### Cloud Setup (After)
-- Supabase: $0/month (Free tier)
+- Neon: $0/month (Free tier)
 - Render: $0/month (Free tier)
 - GitHub: $0/month (Free)
 - **Total**: $0/month = **$0/year**
@@ -467,7 +467,7 @@ ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : fal
 ### Upgrade Path
 When you need more:
 - Render Starter: $7/month
-- Supabase Pro: $25/month
+- Neon Scale: paid plans
 - **Total**: $32/month = $384/year
 
 **Still cheaper than SQL Server!**

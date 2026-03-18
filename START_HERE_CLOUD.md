@@ -2,7 +2,7 @@
 
 ## 🎉 Welcome to Your Cloud-Ready Clinic Management System!
 
-Your system has been **upgraded** to run on the cloud using **GitHub + Supabase + Render** - all **100% FREE**!
+Your system has been **upgraded** to run on the cloud using **GitHub + Neon + Render** - all **100% FREE**!
 
 ---
 
@@ -12,7 +12,7 @@ Your system has been **upgraded** to run on the cloud using **GitHub + Supabase 
 
 | Feature | Status |
 |---------|--------|
-| **Database** | ✅ PostgreSQL (Supabase) |
+| **Database** | ✅ PostgreSQL (Neon) |
 | **Hosting** | ✅ Render (Auto-deploy) |
 | **Version Control** | ✅ GitHub |
 | **Cost** | ✅ $0/month (Free tier) |

@@ -1,6 +1,6 @@
 # 🏥 Clinic Management System
 
-A comprehensive clinic management solution built with Node.js and SQL Server.
+A comprehensive clinic management solution built with Node.js and Neon (serverless PostgreSQL).
 
 ## 📋 Phase 1 - MVP Features
 
@@ -15,7 +15,7 @@ A comprehensive clinic management solution built with Node.js and SQL Server.
 
 ### Prerequisites
 - Node.js (v16 or higher)
-- PostgreSQL database (Supabase recommended)
+- PostgreSQL database (Neon recommended)
 
 ### Local Development
 
@@ -26,7 +26,7 @@ npm install
 
 2. **Configure Database**
 - Copy `.env.example` to `.env`
-- Update `DATABASE_URL` with your PostgreSQL/Supabase connection string
+- Update `DATABASE_URL` with your Neon (or PostgreSQL) connection string
 
 3. **Setup Database**
 ```bash
@@ -47,14 +47,14 @@ npm start
 
 ### Cloud Deployment
 
-**Deploy to GitHub + Supabase + Render (FREE)**
+**Deploy to GitHub + Neon + Render (FREE)**
 
-See `DEPLOYMENT_GUIDE.md` for complete step-by-step instructions.
+See `DEPLOYMENT_GUIDE.md` and `NEON_SETUP.md` for step-by-step instructions.
 
 Quick steps:
-1. Create Supabase project → Get DATABASE_URL
+1. Create Neon project at [neon.tech](https://neon.tech) → Get DATABASE_URL
 2. Push code to GitHub
-3. Deploy on Render → Add DATABASE_URL
+3. Deploy on Render → Add DATABASE_URL (Neon connection string)
 4. Done! Your app is live 🎉
 
 ## 📁 Project Structure

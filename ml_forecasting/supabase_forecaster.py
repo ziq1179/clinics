@@ -1,6 +1,6 @@
 """
-Revenue Forecasting with Supabase Integration
-Connects to your existing Supabase database and generates forecasts
+Revenue Forecasting with Database Integration (Neon / PostgreSQL)
+Connects to your existing database and generates forecasts
 """
 
 import pandas as pd
@@ -19,7 +19,7 @@ from database.config import pool
 
 class SupabaseRevenueForecaster:
     """
-    Revenue forecasting integrated with Supabase database
+    Revenue forecasting integrated with Neon/PostgreSQL database
     """
     
     def __init__(self):
@@ -29,7 +29,7 @@ class SupabaseRevenueForecaster:
         
     async def fetch_historical_data(self, months_back=12):
         """
-        Fetch historical revenue data from Supabase
+        Fetch historical revenue data from database
         
         Args:
             months_back: Number of months of historical data to fetch
@@ -37,7 +37,7 @@ class SupabaseRevenueForecaster:
         Returns:
             DataFrame with historical revenue data
         """
-        print(f"📊 Fetching {months_back} months of historical data from Supabase...")
+        print(f"📊 Fetching {months_back} months of historical data from database...")
         
         query = """
             SELECT 
@@ -71,9 +71,9 @@ class SupabaseRevenueForecaster:
     
     def fetch_historical_data_sync(self, months_back=12):
         """
-        Synchronous version - fetch historical data from Supabase
+        Synchronous version - fetch historical data from database
         """
-        print(f"📊 Fetching {months_back} months of historical data from Supabase...")
+        print(f"📊 Fetching {months_back} months of historical data from database...")
         
         query = f"""
             SELECT 
@@ -181,9 +181,9 @@ class SupabaseRevenueForecaster:
     
     def save_forecasts_to_supabase(self, model_version='prophet_v1'):
         """
-        Save forecasts to Supabase database
+        Save forecasts to database (Neon/PostgreSQL)
         """
-        print("💾 Saving forecasts to Supabase...")
+        print("💾 Saving forecasts to database...")
         
         if self.forecast is None:
             print("❌ No forecast to save. Train model first!")
