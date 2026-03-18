@@ -10,8 +10,8 @@ async function showDashboard() {
         const appointments = todayAppointments.data || [];
         const billing = todayBilling.data || {};
         
-        const scheduledCount = appointments.filter(a => a.Status === 'Scheduled').length;
-        const completedCount = appointments.filter(a => a.Status === 'Completed').length;
+        const scheduledCount = appointments.filter(a => a.status === 'Scheduled').length;
+        const completedCount = appointments.filter(a => a.status === 'Completed').length;
         
         document.getElementById('content-area').innerHTML = `
             <div class="row mb-4">
@@ -56,7 +56,7 @@ async function showDashboard() {
                     <div class="card stat-card bg-warning text-dark">
                         <div class="card-body">
                             <i class="fas fa-rupee-sign float-end"></i>
-                            <h3>${formatCurrency(billing.TotalRevenue || 0)}</h3>
+                            <h3>${formatCurrency(billing.total_revenue || 0)}</h3>
                             <p>Today's Revenue</p>
                         </div>
                     </div>
@@ -73,19 +73,19 @@ async function showDashboard() {
                             <table class="table table-sm">
                                 <tr>
                                     <td><strong>Total Bills:</strong></td>
-                                    <td class="text-end">${billing.TotalBills || 0}</td>
+                                    <td class="text-end">${billing.total_bills || 0}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Total Revenue:</strong></td>
-                                    <td class="text-end text-success">${formatCurrency(billing.TotalRevenue || 0)}</td>
+                                    <td class="text-end text-success">${formatCurrency(billing.total_revenue || 0)}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Paid Amount:</strong></td>
-                                    <td class="text-end text-success">${formatCurrency(billing.PaidAmount || 0)}</td>
+                                    <td class="text-end text-success">${formatCurrency(billing.paid_amount || 0)}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Pending Amount:</strong></td>
-                                    <td class="text-end text-warning">${formatCurrency(billing.PendingAmount || 0)}</td>
+                                    <td class="text-end text-warning">${formatCurrency(billing.pending_amount || 0)}</td>
                                 </tr>
                             </table>
                         </div>
@@ -140,19 +140,19 @@ async function showDashboard() {
                                         <tbody>
                                             ${appointments.map(apt => `
                                                 <tr>
-                                                    <td>${formatTime(apt.AppointmentTime)}</td>
+                                                    <td>${formatTime(apt.appointment_time)}</td>
                                                     <td>
-                                                        <strong>${apt.PatientName}</strong><br>
-                                                        <small class="text-muted">${apt.PatientCode}</small>
+                                                        <strong>${apt.patient_name || 'N/A'}</strong><br>
+                                                        <small class="text-muted">${apt.patient_code || 'N/A'}</small>
                                                     </td>
                                                     <td>
-                                                        ${apt.DoctorName}<br>
-                                                        <small class="text-muted">${apt.Specialization}</small>
+                                                        ${apt.doctor_name || 'N/A'}<br>
+                                                        <small class="text-muted">${apt.specialization || 'N/A'}</small>
                                                     </td>
-                                                    <td><span class="badge bg-secondary">${apt.AppointmentType}</span></td>
-                                                    <td><span class="badge status-${apt.Status.toLowerCase()}">${apt.Status}</span></td>
+                                                    <td><span class="badge bg-secondary">${apt.appointment_type || 'N/A'}</span></td>
+                                                    <td><span class="badge status-${(apt.status || '').toLowerCase()}">${apt.status || 'N/A'}</span></td>
                                                     <td>
-                                                        <button class="btn btn-sm btn-primary" onclick="viewAppointmentDetails(${apt.AppointmentID})">
+                                                        <button class="btn btn-sm btn-primary" onclick="viewAppointmentDetails(${apt.appointment_id})">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
                                                     </td>

@@ -44,28 +44,28 @@ async function showAppointments() {
                                 <tbody>
                                     ${appointments.map(apt => `
                                         <tr>
-                                            <td><strong>${apt.AppointmentCode}</strong></td>
-                                            <td>${formatDate(apt.AppointmentDate)}</td>
-                                            <td>${formatTime(apt.AppointmentTime)}</td>
+                                            <td><strong>${apt.appointment_code || 'N/A'}</strong></td>
+                                            <td>${apt.appointment_date ? formatDate(apt.appointment_date) : 'N/A'}</td>
+                                            <td>${formatTime(apt.appointment_time)}</td>
                                             <td>
-                                                ${apt.PatientName}<br>
-                                                <small class="text-muted">${apt.PatientCode}</small>
+                                                ${apt.patient_name || 'N/A'}<br>
+                                                <small class="text-muted">${apt.patient_code || 'N/A'}</small>
                                             </td>
                                             <td>
-                                                ${apt.DoctorName}<br>
-                                                <small class="text-muted">${apt.Specialization}</small>
+                                                ${apt.doctor_name || 'N/A'}<br>
+                                                <small class="text-muted">${apt.specialization || 'N/A'}</small>
                                             </td>
-                                            <td><span class="badge bg-secondary">${apt.AppointmentType}</span></td>
-                                            <td><span class="badge status-${apt.Status.toLowerCase()}">${apt.Status}</span></td>
+                                            <td><span class="badge bg-secondary">${apt.appointment_type || 'N/A'}</span></td>
+                                            <td><span class="badge status-${(apt.status || '').toLowerCase()}">${apt.status || 'N/A'}</span></td>
                                             <td>
-                                                <button class="btn btn-sm btn-info btn-action" onclick="viewAppointmentDetails(${apt.AppointmentID})">
+                                                <button class="btn btn-sm btn-info btn-action" onclick="viewAppointmentDetails(${apt.appointment_id})">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                ${apt.Status === 'Scheduled' ? `
-                                                    <button class="btn btn-sm btn-success btn-action" onclick="markCompleted(${apt.AppointmentID})">
+                                                ${apt.status === 'Scheduled' ? `
+                                                    <button class="btn btn-sm btn-success btn-action" onclick="markCompleted(${apt.appointment_id})">
                                                         <i class="fas fa-check"></i>
                                                     </button>
-                                                    <button class="btn btn-sm btn-danger btn-action" onclick="cancelAppointment(${apt.AppointmentID})">
+                                                    <button class="btn btn-sm btn-danger btn-action" onclick="cancelAppointment(${apt.appointment_id})">
                                                         <i class="fas fa-times"></i>
                                                     </button>
                                                 ` : ''}
@@ -103,7 +103,7 @@ async function showAppointments() {
                                         <select class="form-select" id="appointmentPatientId" required>
                                             <option value="">Select Patient</option>
                                             ${window.patients.map(p => `
-                                                <option value="${p.PatientID}">${p.FullName} (${p.PatientCode})</option>
+                                                <option value="${p.patient_id}">${p.full_name} (${p.patient_code || p.patient_id})</option>
                                             `).join('')}
                                         </select>
                                     </div>
@@ -112,7 +112,7 @@ async function showAppointments() {
                                         <select class="form-select" id="appointmentDoctorId" required>
                                             <option value="">Select Doctor</option>
                                             ${window.doctors.map(d => `
-                                                <option value="${d.DoctorID}">${d.FullName} - ${d.Specialization}</option>
+                                                <option value="${d.doctor_id}">${d.full_name} - ${d.specialization}</option>
                                             `).join('')}
                                         </select>
                                     </div>
@@ -218,7 +218,7 @@ async function viewAppointmentDetails(id) {
         const response = await apiRequest(`/appointments/${id}`);
         const apt = response.data;
         
-        alert(`Appointment Details:\n\nID: ${apt.AppointmentCode}\nPatient: ${apt.PatientName}\nDoctor: ${apt.DoctorName}\nDate: ${formatDate(apt.AppointmentDate)}\nTime: ${formatTime(apt.AppointmentTime)}\nStatus: ${apt.Status}`);
+        alert(`Appointment Details:\n\nID: ${apt.appointment_code}\nPatient: ${apt.patient_name}\nDoctor: ${apt.doctor_name}\nDate: ${apt.appointment_date ? formatDate(apt.appointment_date) : 'N/A'}\nTime: ${formatTime(apt.appointment_time)}\nStatus: ${apt.status}`);
     } catch (error) {
         console.error('Error loading appointment:', error);
     }

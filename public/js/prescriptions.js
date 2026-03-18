@@ -40,22 +40,22 @@ async function showPrescriptions() {
                                 <tbody>
                                     ${prescriptions.map(rx => `
                                         <tr>
-                                            <td><strong>${rx.PrescriptionCode}</strong></td>
-                                            <td>${formatDate(rx.CreatedDate)}</td>
+                                            <td><strong>${rx.prescription_code || 'N/A'}</strong></td>
+                                            <td>${rx.created_date ? formatDate(rx.created_date) : 'N/A'}</td>
                                             <td>
-                                                ${rx.PatientName}<br>
-                                                <small class="text-muted">${rx.PatientCode}</small>
+                                                ${rx.patient_name || 'N/A'}<br>
+                                                <small class="text-muted">${rx.patient_code || 'N/A'}</small>
                                             </td>
                                             <td>
-                                                ${rx.DoctorName}<br>
-                                                <small class="text-muted">${rx.Specialization}</small>
+                                                ${rx.doctor_name || 'N/A'}<br>
+                                                <small class="text-muted">${rx.specialization || 'N/A'}</small>
                                             </td>
-                                            <td>${rx.Diagnosis ? rx.Diagnosis.substring(0, 50) + '...' : 'N/A'}</td>
+                                            <td>${rx.diagnosis ? rx.diagnosis.substring(0, 50) + '...' : 'N/A'}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-info btn-action" onclick="viewPrescription(${rx.PrescriptionID})">
+                                                <button class="btn btn-sm btn-info btn-action" onclick="viewPrescription(${rx.prescription_id})">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-success btn-action" onclick="downloadPrescription(${rx.PrescriptionID})">
+                                                <button class="btn btn-sm btn-success btn-action" onclick="downloadPrescription(${rx.prescription_id})">
                                                     <i class="fas fa-download"></i> PDF
                                                 </button>
                                             </td>
@@ -91,10 +91,10 @@ async function showPrescriptions() {
                                     <select class="form-select" id="prescriptionAppointmentId" required onchange="loadAppointmentDetails()">
                                         <option value="">Select Appointment</option>
                                         ${window.scheduledAppointments.map(apt => `
-                                            <option value="${apt.AppointmentID}" 
-                                                    data-patient-id="${apt.PatientID}" 
-                                                    data-doctor-id="${apt.DoctorID}">
-                                                ${apt.AppointmentCode} - ${apt.PatientName} with ${apt.DoctorName} (${formatDate(apt.AppointmentDate)})
+                                            <option value="${apt.appointment_id}" 
+                                                    data-patient-id="${apt.patient_id}" 
+                                                    data-doctor-id="${apt.doctor_id}">
+                                                ${apt.appointment_code || apt.appointment_id} - ${apt.patient_name} with ${apt.doctor_name} (${apt.appointment_date ? formatDate(apt.appointment_date) : 'N/A'})
                                             </option>
                                         `).join('')}
                                     </select>
@@ -191,8 +191,8 @@ async function savePrescription() {
         showToast('Prescription created successfully', 'success');
         bootstrap.Modal.getInstance(document.getElementById('prescriptionModal')).hide();
         
-        if (response.data && response.data.PrescriptionID) {
-            downloadPrescription(response.data.PrescriptionID);
+        if (response.data && response.data.prescription_id) {
+            downloadPrescription(response.data.prescription_id);
         }
         
         showPrescriptions();
@@ -207,29 +207,29 @@ async function viewPrescription(id) {
         const rx = response.data;
         
         const details = `
-Prescription: ${rx.PrescriptionCode}
-Date: ${formatDate(rx.CreatedDate)}
+Prescription: ${rx.prescription_code || 'N/A'}
+Date: ${rx.created_date ? formatDate(rx.created_date) : 'N/A'}
 
-Patient: ${rx.PatientName} (${rx.PatientCode})
-Age: ${rx.Age} | Gender: ${rx.Gender}
+Patient: ${rx.patient_name || 'N/A'} (${rx.patient_code || 'N/A'})
+Age: ${rx.age != null ? rx.age : 'N/A'} | Gender: ${rx.gender || 'N/A'}
 
-Doctor: ${rx.DoctorName}
-Specialization: ${rx.Specialization}
+Doctor: ${rx.doctor_name || 'N/A'}
+Specialization: ${rx.specialization || 'N/A'}
 
-Vital Signs: ${rx.VitalSigns || 'N/A'}
-Symptoms: ${rx.Symptoms || 'N/A'}
-Diagnosis: ${rx.Diagnosis || 'N/A'}
+Vital Signs: ${rx.vital_signs || 'N/A'}
+Symptoms: ${rx.symptoms || 'N/A'}
+Diagnosis: ${rx.diagnosis || 'N/A'}
 
 Medicines:
-${rx.Medicines || 'N/A'}
+${rx.medicines || 'N/A'}
 
 Lab Tests:
-${rx.LabTests || 'N/A'}
+${rx.lab_tests || 'N/A'}
 
 Instructions:
-${rx.Instructions || 'N/A'}
+${rx.instructions || 'N/A'}
 
-Follow-up: ${rx.FollowUpDate ? formatDate(rx.FollowUpDate) : 'N/A'}
+Follow-up: ${rx.follow_up_date ? formatDate(rx.follow_up_date) : 'N/A'}
         `;
         
         alert(details);

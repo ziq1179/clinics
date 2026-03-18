@@ -45,21 +45,21 @@ async function showPatients() {
                                 <tbody>
                                     ${patients.map(patient => `
                                         <tr>
-                                            <td><strong>${patient.PatientCode}</strong></td>
-                                            <td>${patient.FullName}</td>
-                                            <td>${patient.CNIC || 'N/A'}</td>
-                                            <td>${patient.ContactNumber}</td>
-                                            <td>${patient.Gender}</td>
-                                            <td>${patient.Age || 'N/A'}</td>
-                                            <td>${formatDate(patient.CreatedDate)}</td>
+                                            <td><strong>${patient.patient_code || 'N/A'}</strong></td>
+                                            <td>${patient.full_name || 'N/A'}</td>
+                                            <td>${patient.cnic || 'N/A'}</td>
+                                            <td>${patient.contact_number || 'N/A'}</td>
+                                            <td>${patient.gender || 'N/A'}</td>
+                                            <td>${patient.age != null ? patient.age : 'N/A'}</td>
+                                            <td>${patient.created_date ? formatDate(patient.created_date) : 'N/A'}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-info btn-action" onclick="viewPatient(${patient.PatientID})">
+                                                <button class="btn btn-sm btn-info btn-action" onclick="viewPatient(${patient.patient_id})">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-warning btn-action" onclick="editPatient(${patient.PatientID})">
+                                                <button class="btn btn-sm btn-warning btn-action" onclick="editPatient(${patient.patient_id})">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger btn-action" onclick="deletePatient(${patient.PatientID})">
+                                                <button class="btn btn-sm btn-danger btn-action" onclick="deletePatient(${patient.patient_id})">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -186,14 +186,14 @@ async function editPatient(id) {
         const patient = response.data;
         
         document.getElementById('patientModalTitle').textContent = 'Edit Patient';
-        document.getElementById('patientId').value = patient.PatientID;
-        document.getElementById('fullName').value = patient.FullName;
-        document.getElementById('cnic').value = patient.CNIC || '';
-        document.getElementById('contactNumber').value = patient.ContactNumber;
-        document.getElementById('gender').value = patient.Gender;
-        document.getElementById('dateOfBirth').value = patient.DateOfBirth ? patient.DateOfBirth.split('T')[0] : '';
-        document.getElementById('address').value = patient.Address || '';
-        document.getElementById('medicalHistory').value = patient.MedicalHistory || '';
+        document.getElementById('patientId').value = patient.patient_id;
+        document.getElementById('fullName').value = patient.full_name;
+        document.getElementById('cnic').value = patient.cnic || '';
+        document.getElementById('contactNumber').value = patient.contact_number;
+        document.getElementById('gender').value = patient.gender;
+        document.getElementById('dateOfBirth').value = patient.date_of_birth ? patient.date_of_birth.split('T')[0] : '';
+        document.getElementById('address').value = patient.address || '';
+        document.getElementById('medicalHistory').value = patient.medical_history || '';
         
         new bootstrap.Modal(document.getElementById('patientModal')).show();
     } catch (error) {

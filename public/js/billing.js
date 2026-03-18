@@ -44,21 +44,21 @@ async function showBilling() {
                                 <tbody>
                                     ${bills.map(bill => `
                                         <tr>
-                                            <td><strong>${bill.BillNumber}</strong></td>
-                                            <td>${formatDateTime(bill.BillDate)}</td>
+                                            <td><strong>${bill.bill_number || 'N/A'}</strong></td>
+                                            <td>${formatDateTime(bill.bill_date)}</td>
                                             <td>
-                                                ${bill.PatientName}<br>
-                                                <small class="text-muted">${bill.PatientCode}</small>
+                                                ${bill.patient_name || 'N/A'}<br>
+                                                <small class="text-muted">${bill.patient_code || 'N/A'}</small>
                                             </td>
-                                            <td>${bill.DoctorName || 'N/A'}</td>
-                                            <td><strong>${formatCurrency(bill.NetAmount)}</strong></td>
-                                            <td><span class="badge bg-info">${bill.PaymentMethod}</span></td>
-                                            <td><span class="badge status-${bill.PaymentStatus.toLowerCase()}">${bill.PaymentStatus}</span></td>
+                                            <td>${bill.doctor_name || 'N/A'}</td>
+                                            <td><strong>${formatCurrency(bill.net_amount || 0)}</strong></td>
+                                            <td><span class="badge bg-info">${bill.payment_method || 'N/A'}</span></td>
+                                            <td><span class="badge status-${(bill.payment_status || '').toLowerCase()}">${bill.payment_status || 'N/A'}</span></td>
                                             <td>
-                                                <button class="btn btn-sm btn-info btn-action" onclick="viewBill(${bill.BillID})">
+                                                <button class="btn btn-sm btn-info btn-action" onclick="viewBill(${bill.bill_id})">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-success btn-action" onclick="downloadBill(${bill.BillID})">
+                                                <button class="btn btn-sm btn-success btn-action" onclick="downloadBill(${bill.bill_id})">
                                                     <i class="fas fa-download"></i> PDF
                                                 </button>
                                             </td>
@@ -95,10 +95,10 @@ async function showBilling() {
                                         <select class="form-select" id="billAppointmentId" onchange="loadAppointmentBillDetails()">
                                             <option value="">Select Appointment</option>
                                             ${window.completedAppointments.map(apt => `
-                                                <option value="${apt.AppointmentID}" 
-                                                        data-patient-id="${apt.PatientID}"
-                                                        data-consultation-fee="${apt.ConsultationFee}">
-                                                    ${apt.AppointmentCode} - ${apt.PatientName} with ${apt.DoctorName}
+                                                <option value="${apt.appointment_id}" 
+                                                        data-patient-id="${apt.patient_id}"
+                                                        data-consultation-fee="${apt.consultation_fee || 0}">
+                                                    ${apt.appointment_code || apt.appointment_id} - ${apt.patient_name} with ${apt.doctor_name}
                                                 </option>
                                             `).join('')}
                                         </select>
@@ -108,7 +108,7 @@ async function showBilling() {
                                         <select class="form-select" id="billPatientId" required>
                                             <option value="">Select Patient</option>
                                             ${window.patients.map(p => `
-                                                <option value="${p.PatientID}">${p.FullName} (${p.PatientCode})</option>
+                                                <option value="${p.patient_id}">${p.full_name} (${p.patient_code || p.patient_id})</option>
                                             `).join('')}
                                         </select>
                                     </div>
@@ -257,8 +257,8 @@ async function saveBill() {
         showToast('Bill generated successfully', 'success');
         bootstrap.Modal.getInstance(document.getElementById('billModal')).hide();
         
-        if (response.data && response.data.BillID) {
-            downloadBill(response.data.BillID);
+        if (response.data && response.data.bill_id) {
+            downloadBill(response.data.bill_id);
         }
         
         showBilling();
@@ -273,23 +273,23 @@ async function viewBill(id) {
         const bill = response.data;
         
         const details = `
-Bill Number: ${bill.BillNumber}
-Date: ${formatDateTime(bill.BillDate)}
+Bill Number: ${bill.bill_number || 'N/A'}
+Date: ${formatDateTime(bill.bill_date)}
 
-Patient: ${bill.PatientName} (${bill.PatientCode})
-${bill.DoctorName ? 'Doctor: ' + bill.DoctorName : ''}
+Patient: ${bill.patient_name || 'N/A'} (${bill.patient_code || 'N/A'})
+${bill.doctor_name ? 'Doctor: ' + bill.doctor_name : ''}
 
-Consultation Fee: ${formatCurrency(bill.ConsultationFee)}
-Lab Charges: ${formatCurrency(bill.LabCharges)}
-Medicine Charges: ${formatCurrency(bill.MedicineCharges)}
-Other Charges: ${formatCurrency(bill.OtherCharges)}
-Total: ${formatCurrency(bill.TotalAmount)}
-Discount: ${formatCurrency(bill.Discount)}
-Net Amount: ${formatCurrency(bill.NetAmount)}
+Consultation Fee: ${formatCurrency(bill.consultation_fee || 0)}
+Lab Charges: ${formatCurrency(bill.lab_charges || 0)}
+Medicine Charges: ${formatCurrency(bill.medicine_charges || 0)}
+Other Charges: ${formatCurrency(bill.other_charges || 0)}
+Total: ${formatCurrency(bill.total_amount || 0)}
+Discount: ${formatCurrency(bill.discount || 0)}
+Net Amount: ${formatCurrency(bill.net_amount || 0)}
 
-Payment Method: ${bill.PaymentMethod}
-Payment Status: ${bill.PaymentStatus}
-${bill.Notes ? 'Notes: ' + bill.Notes : ''}
+Payment Method: ${bill.payment_method || 'N/A'}
+Payment Status: ${bill.payment_status || 'N/A'}
+${bill.notes ? 'Notes: ' + bill.notes : ''}
         `;
         
         alert(details);

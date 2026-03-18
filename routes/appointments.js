@@ -10,8 +10,9 @@ router.get('/', async (req, res) => {
             SELECT 
                 a.appointment_id, a.appointment_code, a.appointment_date, a.appointment_time,
                 a.appointment_type, a.status, a.reason, a.notes,
+                a.patient_id, a.doctor_id,
                 p.patient_code, p.full_name AS patient_name, p.contact_number AS patient_contact,
-                d.doctor_code, d.full_name AS doctor_name, d.specialization
+                d.doctor_code, d.full_name AS doctor_name, d.specialization, d.consultation_fee
             FROM appointments a
             INNER JOIN patients p ON a.patient_id = p.patient_id
             INNER JOIN doctors d ON a.doctor_id = d.doctor_id
@@ -54,8 +55,9 @@ router.get('/today', async (req, res) => {
             SELECT 
                 a.appointment_id, a.appointment_code, a.appointment_time,
                 a.appointment_type, a.status, a.reason,
+                a.patient_id, a.doctor_id,
                 p.patient_code, p.full_name AS patient_name, p.contact_number AS patient_contact,
-                d.doctor_code, d.full_name AS doctor_name, d.specialization
+                d.doctor_code, d.full_name AS doctor_name, d.specialization, d.consultation_fee
             FROM appointments a
             INNER JOIN patients p ON a.patient_id = p.patient_id
             INNER JOIN doctors d ON a.doctor_id = d.doctor_id

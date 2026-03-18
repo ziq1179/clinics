@@ -36,20 +36,20 @@ async function showDoctors() {
                                 <tbody>
                                     ${doctors.map(doctor => `
                                         <tr>
-                                            <td><strong>${doctor.DoctorCode}</strong></td>
-                                            <td>${doctor.FullName}</td>
-                                            <td><span class="badge bg-info">${doctor.Specialization}</span></td>
-                                            <td>${doctor.Qualification || 'N/A'}</td>
-                                            <td>${doctor.ContactNumber}</td>
-                                            <td>${formatCurrency(doctor.ConsultationFee)}</td>
+                                            <td><strong>${doctor.doctor_code || 'N/A'}</strong></td>
+                                            <td>${doctor.full_name || 'N/A'}</td>
+                                            <td><span class="badge bg-info">${doctor.specialization || 'N/A'}</span></td>
+                                            <td>${doctor.qualification || 'N/A'}</td>
+                                            <td>${doctor.contact_number || 'N/A'}</td>
+                                            <td>${formatCurrency(doctor.consultation_fee || 0)}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-info btn-action" onclick="viewDoctor(${doctor.DoctorID})">
+                                                <button class="btn btn-sm btn-info btn-action" onclick="viewDoctor(${doctor.doctor_id})">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-warning btn-action" onclick="editDoctor(${doctor.DoctorID})">
+                                                <button class="btn btn-sm btn-warning btn-action" onclick="editDoctor(${doctor.doctor_id})">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger btn-action" onclick="deleteDoctor(${doctor.DoctorID})">
+                                                <button class="btn btn-sm btn-danger btn-action" onclick="deleteDoctor(${doctor.doctor_id})">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -172,14 +172,14 @@ async function editDoctor(id) {
         const doctor = response.data;
         
         document.getElementById('doctorModalTitle').textContent = 'Edit Doctor';
-        document.getElementById('doctorId').value = doctor.DoctorID;
-        document.getElementById('doctorFullName').value = doctor.FullName;
-        document.getElementById('specialization').value = doctor.Specialization;
-        document.getElementById('qualification').value = doctor.Qualification || '';
-        document.getElementById('doctorContactNumber').value = doctor.ContactNumber;
-        document.getElementById('email').value = doctor.Email || '';
-        document.getElementById('consultationFee').value = doctor.ConsultationFee;
-        document.getElementById('availabilitySchedule').value = doctor.AvailabilitySchedule || '';
+        document.getElementById('doctorId').value = doctor.doctor_id;
+        document.getElementById('doctorFullName').value = doctor.full_name;
+        document.getElementById('specialization').value = doctor.specialization;
+        document.getElementById('qualification').value = doctor.qualification || '';
+        document.getElementById('doctorContactNumber').value = doctor.contact_number;
+        document.getElementById('email').value = doctor.email || '';
+        document.getElementById('consultationFee').value = doctor.consultation_fee || '';
+        document.getElementById('availabilitySchedule').value = doctor.availability_schedule || '';
         
         new bootstrap.Modal(document.getElementById('doctorModal')).show();
     } catch (error) {
